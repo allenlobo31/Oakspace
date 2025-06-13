@@ -6,7 +6,7 @@ function IntroImage() {
       <div className="relative w-full">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
         <img
-          src="https://cb2.scene7.com/is/image/CB2/0529_HP_D_SummerisCalling_Hero_re?wid=1920&qlt=75"
+          src="https://cb2.scene7.com/is/image/CB2/061125_WarehouseSale_dHP?wid=1920&qlt=75"
           alt="Intro"
           className="w-full h-screen object-cover"
         />
