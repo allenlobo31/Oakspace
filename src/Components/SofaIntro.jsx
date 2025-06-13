@@ -3,7 +3,7 @@ import React from 'react'
 function SofaIntro() {
     return (
         <div className="sofa-intro">
-            <h1 className='text-2xl md:text-2xl lg:text-4xl font-semibold tracking-wide text-center mb-2 mt-8'>
+            <h1 className='text-2xl md:text-2xl lg:text-4xl font-semibold tracking-wide text-center mb-2 mt-10'>
                 Your New Throne Of Comfort
             </h1>
             <p className=' lg:text-1xl tracking-wide text-center'>
