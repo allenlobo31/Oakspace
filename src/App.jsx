@@ -6,6 +6,7 @@ import IntroImage from './Components/IntroImage'
 import SortByRoom from './Components/SortByRoom'
 import BestOffers from './Components/BestOffers'  
 import SofaIntro from './Components/SofaIntro'
+import LightIntro from './Components/LightIntro'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
       <IntroVideo />
       <SortByRoom />
       <SofaIntro />
+      <LightIntro />
     
     </>
   )
