@@ -8,6 +8,7 @@ import BestOffers from './Components/BestOffers'
 import SofaIntro from './Components/SofaIntro'
 import LightIntro from './Components/LightIntro'
 import BedRoomIntro from './Components/BedRoomIntro'
+import Company from './Components/Company'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
       <SofaIntro />
       <LightIntro />
       <BedRoomIntro />
+      <Company />
     
     </>
   )
