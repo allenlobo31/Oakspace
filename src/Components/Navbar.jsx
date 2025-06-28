@@ -123,30 +123,30 @@ function Navbar(){
             {/* Desktop Categories Menu */}
             <div className="hidden md:flex flex-col justify-center items-center w-full pb-3 hover:bg-white/10 transition-all duration-700">
                 {/* First Row - 4 items */}
-                <ul className="flex items-center justify-center w-full md:space-x-4 lg:space-x-8 lg:mb-1 md:mb-0">
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                <ul className="flex items-center justify-center w-full md:space-x-8 lg:space-x-8 lg:mb-1 md:mb-0 md:mt-3">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         Best Seller
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         Antique Furniture
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         New Arrivals
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         Mandir
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         Office Furniture
                     </a></li>
                 </ul>
 
                 {/* Second Row - 2 items */}
-                <ul className="flex items-center justify-center w-full md:space-x-4 lg:space-x-8">
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                <ul className="flex items-center justify-center w-full md:space-x-10 lg:space-x-8">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         Home Decors
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
                         Children's Section
                     </a></li>
                 </ul>

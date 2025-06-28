@@ -9,6 +9,7 @@ import SofaIntro from './Components/SofaIntro'
 import LightIntro from './Components/LightIntro'
 import BedRoomIntro from './Components/BedRoomIntro'
 import Company from './Components/Company'
+import ExploreFurniture from './Components/ExploreFurniture'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
       <LightIntro />
       <BedRoomIntro />
       <Company />
+      <ExploreFurniture />
     
     </>
   )
