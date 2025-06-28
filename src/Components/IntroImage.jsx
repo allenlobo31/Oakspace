@@ -8,13 +8,13 @@ function IntroImage() {
         <img
           src="https://cb2.scene7.com/is/image/CB2/061125_WarehouseSale_dHP?wid=1920&qlt=75"
           alt="Intro"
-          className="lg:w-full lg:h-screen w-full h-[600px] object-cover"
+          className="lg:w-[1265px] w-full h-[600px] object-cover"
         />
         
         {/* Centered Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-6 -mt-40 lg:mt-0 md:-mt-60">
          <div className="lg:-mt-8">
-           <h1 className="mt-30 md:mt-60 text-4xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-center">
+           <h1 className="mt-30 md:mt-60 lg:mt-[50px] text-4xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-center">
             Welcome to Oakspace
           </h1>
           <h3 className="mt-2 text-xls md:text-2xl lg:text-3xl font-semibold tracking-wider text-center text-white">
