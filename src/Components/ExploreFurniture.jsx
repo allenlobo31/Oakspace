@@ -23,7 +23,7 @@ function ExploreFurniture() {
                                     centeredSlides: true
                                 },
                                 768: {  // md
-                                    slidesPerView: 3,
+                                    slidesPerView: 5,
                                     spaceBetween: 30,
                                     centeredSlides: false
                                 },
@@ -127,7 +127,7 @@ function ExploreFurniture() {
                                     centeredSlides: true
                                 },
                                 768: {  // md
-                                    slidesPerView: 3,
+                                    slidesPerView: 5,
                                     spaceBetween: 30,
                                     centeredSlides: false
                                 },
