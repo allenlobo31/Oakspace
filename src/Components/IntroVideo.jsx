@@ -10,7 +10,7 @@ function IntroVideo() {
         muted={true}
         playsInline={true}
         preload="auto"
-        className="h-[645px] w-[430px] lg:w-full lg:h-screen md:w-full md:h-screen object-cover"
+        className="h-[450px] w-[430px] lg:w-full lg:h-screen md:w-full md:h-[550px] object-cover"
       ></video>
       <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white space-y-6">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center">
