@@ -1,32 +1,18 @@
-import {React} from 'react'
+import { React } from 'react'
 import './App.css'
-import IntroVideo from './Components/IntroVideo'
-import Navbar from './Components/Navbar'
-import IntroImage from './Components/IntroImage'
-import SortByRoom from './Components/SortByRoom'
-import BestOffers from './Components/BestOffers'  
-import SofaIntro from './Components/SofaIntro'
-import LightIntro from './Components/LightIntro'
-import BedRoomIntro from './Components/BedRoomIntro'
-import Company from './Components/Company'
-import ExploreFurniture from './Components/ExploreFurniture'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home.jsx'
+import Profile from './pages/Profile.jsx'
 
 function App() {
-
   return (
-    <>
-      <Navbar />
-      <IntroImage />
-      <BestOffers />
-      <IntroVideo />
-      <SortByRoom />
-      <SofaIntro />
-      <LightIntro />
-      <BedRoomIntro />
-      <Company />
-      <ExploreFurniture />
-    
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/cart" element={<Home />} />
+      </Routes>
+    </Router>
   )
 }
 

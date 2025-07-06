@@ -6,6 +6,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ContactsIcon from '@mui/icons-material/Contacts';
+import { Link } from "react-router-dom";
 
 function Navbar(){
     const [showSearch, setShowSearch] = useState(false);
@@ -26,15 +27,15 @@ function Navbar(){
             <div className="container mx-auto flex justify-between items-center py-[25px] px-[30px]">
                 {/* Left Side - Cart, Like & Contact Icons (Mobile) */}
                 <div className="flex items-center space-x-4 md:hidden">
-                    <a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
+                    <Link to="/profile" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
                         <PersonOutlineIcon className="text-2xl" />
-                    </a>
-                    <a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
+                    </Link>
+                    <Link to="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
                         <FavoriteBorderIcon className="text-2xl" />
-                    </a>
-                    <a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
-                        <ShoppingCartOutlinedIcon className="text-2xl" />
-                    </a>
+                    </Link>
+                    <Link to="/cart" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
+                       <ShoppingCartOutlinedIcon className="text-2xl" />
+                    </Link>
                 </div>
 
                 {/* Desktop Search (Hidden on Mobile) */}
@@ -83,18 +84,18 @@ function Navbar(){
 
                 {/* Desktop Navigation (Hidden on Mobile) */}
                 <ul className="hidden md:flex md:space-x-4 lg:space-x-8 items-center">
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    <li><Link to="/profile" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <PersonOutlineIcon className="text-3xl" />
-                    </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    </Link></li>
+                    <li><Link to="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <ContactsIcon className="text-3xl" />
-                    </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    </Link></li>
+                    <li><Link to="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <FavoriteBorderIcon className="text-3xl" />
-                    </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    </Link></li>
+                    <li><Link to="/cart" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <ShoppingCartOutlinedIcon className="text-3xl" />
-                    </a></li>
+                    </Link></li>
                     <li>
                         <button className="bg-transparent text-white group-hover:text-black border border-white group-hover:border-black px-6 py-2.5 rounded-full transition-all ease-in-out duration-700 hover:scale-105 text-sm font-medium tracking-wider uppercase">
                             Login
