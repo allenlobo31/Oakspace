@@ -7,10 +7,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import { Link } from "react-router-dom";
+import Profile from "../components/Profile";
 
 function Navbar(){
     const [showSearch, setShowSearch] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isBottomDrawer, setIsBottomDrawer] = useState(false);
+    const [isRightDrawer, setIsRightDrawer] = useState(false);
 
     const toggleSearch = () => {
         setShowSearch(!showSearch);
@@ -27,9 +30,14 @@ function Navbar(){
             <div className="container mx-auto flex justify-between items-center py-[25px] px-[30px]">
                 {/* Left Side - Cart, Like & Contact Icons (Mobile) */}
                 <div className="flex items-center space-x-4 md:hidden">
-                    <Link to="/profile" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
+                    <button onClick={() => setIsBottomDrawer(true)} className="text-white group-hover:text-black transition-all ease-in-out duration-700">
                         <PersonOutlineIcon className="text-2xl" />
-                    </Link>
+                    </button>
+                    <Profile
+                        open={isBottomDrawer}
+                        onOpenChange={setIsBottomDrawer}
+                        direction="bottom"
+                    />
                     <Link to="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700">
                         <FavoriteBorderIcon className="text-2xl" />
                     </Link>
@@ -84,9 +92,15 @@ function Navbar(){
 
                 {/* Desktop Navigation (Hidden on Mobile) */}
                 <ul className="hidden md:flex md:space-x-4 lg:space-x-8 items-center">
-                    <li><Link to="/profile" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    <li><button onClick={() => setIsRightDrawer(true)} className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <PersonOutlineIcon className="text-3xl" />
-                    </Link></li>
+                    </button>
+                    <Profile
+                        open={isRightDrawer}
+                        onOpenChange={setIsRightDrawer}
+                        direction="right"
+                    />
+                    </li>
                     <li><Link to="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <ContactsIcon className="text-3xl" />
                     </Link></li>
