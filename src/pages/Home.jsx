@@ -8,6 +8,7 @@ import LightIntro from "../Components/LightIntro";
 import BedRoomIntro from "../Components/BedRoomIntro";
 import Company from "../Components/Company";
 import ExploreFurniture from "../Components/ExploreFurniture";
+import FurnitureShowcase from "../Components/Sofa";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <BedRoomIntro />
       <Company />
       <ExploreFurniture />
+      <FurnitureShowcase />
     </>
   );
 }
