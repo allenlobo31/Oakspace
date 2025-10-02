@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -8,6 +10,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import ContactsIcon from '@mui/icons-material/Contacts';
 
 function Navbar(){
+    const { cartItemsCount, searchQuery, setSearchQuery, isAdmin } = useApp();
+    const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -54,9 +58,9 @@ function Navbar(){
                 </ul>
 
                 {/* Center Logo */}
-                <div className="text-white group-hover:text-black transition-all ease-in-out duration-700 text-2xl font-bold hover:scale-105">
-                    MyApp
-                </div>
+                <Link to="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 text-2xl font-bold hover:scale-105">
+                    OakSpace
+                </Link>
 
                 {/* Right Side Mobile Controls */}
                 <div className="flex items-center space-x-4 md:hidden">
@@ -83,22 +87,27 @@ function Navbar(){
 
                 {/* Desktop Navigation (Hidden on Mobile) */}
                 <ul className="hidden md:flex md:space-x-4 lg:space-x-8 items-center">
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    <li><Link to="/admin" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <PersonOutlineIcon className="text-3xl" />
-                    </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    </Link></li>
+                    <li><a href="#contact" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <ContactsIcon className="text-3xl" />
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    <li><a href="#favorites" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
                         <FavoriteBorderIcon className="text-3xl" />
                     </a></li>
-                    <li><a href="/" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110">
+                    <li><Link to="/cart" className="text-white group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 relative">
                         <ShoppingCartOutlinedIcon className="text-3xl" />
-                    </a></li>
+                        {cartItemsCount > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
+                                {cartItemsCount}
+                            </span>
+                        )}
+                    </Link></li>
                     <li>
-                        <button className="bg-transparent text-white group-hover:text-black border border-white group-hover:border-black px-6 py-2.5 rounded-full transition-all ease-in-out duration-700 hover:scale-105 text-sm font-medium tracking-wider uppercase">
-                            Login
-                        </button>
+                        <Link to="/admin" className="bg-transparent text-white group-hover:text-black border border-white group-hover:border-black px-6 py-2.5 rounded-full transition-all ease-in-out duration-700 hover:scale-105 text-sm font-medium tracking-wider uppercase">
+                            {isAdmin ? 'Admin' : 'Login'}
+                        </Link>
                     </li>
                 </ul>
             </div>
@@ -122,33 +131,33 @@ function Navbar(){
 
             {/* Desktop Categories Menu */}
             <div className="hidden md:flex flex-col justify-center items-center w-full pb-3 hover:bg-white/10 transition-all duration-700">
-                {/* First Row - 4 items */}
+                {/* First Row - Navigation Links */}
                 <ul className="flex items-center justify-center w-full md:space-x-8 lg:space-x-8 lg:mb-1 md:mb-0 md:mt-3">
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        Best Seller
-                    </a></li>
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        Antique Furniture
-                    </a></li>
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        New Arrivals
-                    </a></li>
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        Mandir
-                    </a></li>
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        Office Furniture
-                    </a></li>
+                    <li><Link to="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        Home
+                    </Link></li>
+                    <li><Link to="/products" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        All Products
+                    </Link></li>
+                    <li><Link to="/products" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        Living Room
+                    </Link></li>
+                    <li><Link to="/products" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        Bedroom
+                    </Link></li>
+                    <li><Link to="/products" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        Office
+                    </Link></li>
                 </ul>
 
-                {/* Second Row - 2 items */}
+                {/* Second Row - More Categories */}
                 <ul className="flex items-center justify-center w-full md:space-x-10 lg:space-x-8">
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        Home Decors
-                    </a></li>
-                    <li><a href="/" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
-                        Children's Section
-                    </a></li>
+                    <li><Link to="/products" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        Dining Room
+                    </Link></li>
+                    <li><Link to="/cart" className="text-white md:text-[20px] group-hover:text-black transition-all ease-in-out duration-700 hover:scale-110 text-sm font-medium tracking-wide">
+                        Cart ({cartItemsCount})
+                    </Link></li>
                 </ul>
             </div>
 

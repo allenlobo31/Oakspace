@@ -54,9 +54,11 @@ function BestOffers() {
                 </div>
             </div>
 
-             <button className="mt-2 px-2 py-2 w-[175px] text-black border border-black/50 backdrop-blur-sm transition-all duration-300 text-lg font-medium hover:scale-105">
-                See all Offers 
-            </button>
+             <div className="flex justify-center">
+                <button className="mt-4 px-6 py-4 w-[175px] text-black border border-black/50 backdrop-blur-sm transition-all duration-300 text-lg font-semibold hover:scale-105 rounded-xl flex items-center justify-center hover:bg-black/5">
+                    See all Offers 
+                </button>
+            </div>
         </div>
     )
 }
