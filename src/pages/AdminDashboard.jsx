@@ -1,47 +1,98 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import AdminForm from '../Components/AdminForm';
 import ProductCard from '../Components/ProductCard';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import LogoutIcon from '@mui/icons-material/Logout';
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Dashboard as DashboardIcon,
+  Inventory as InventoryIcon,
+  Logout as LogoutIcon
+} from '@mui/icons-material';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
 
 const AdminDashboard = () => {
-  const { 
-    products, 
-    addProduct, 
-    updateProduct, 
-    deleteProduct, 
-    isAdmin, 
-    setAdmin, 
+  const {
+    products,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    userData,
+    loginUser,
     cart,
-    cartTotal 
+    cartTotal
   } = useApp();
-  
+
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
-  const [adminPassword, setAdminPassword] = useState('');
-  const [showLogin, setShowLogin] = useState(!isAdmin);
 
-  const handleLogin = (e) => {
+  const [showLogin, setShowLogin] = useState(!userData || userData.type !== 'admin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  const [allUsers, setAllUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+
+  useEffect(() => {
+    if (!showLogin) {
+      const fetchUsers = async () => {
+        try {
+          const snapshot = await getDocs(collection(db, 'users'));
+          const usersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setAllUsers(usersList);
+        } catch (err) {
+          console.error('Error fetching users:', err);
+        } finally {
+          setLoadingUsers(false);
+        }
+      };
+      fetchUsers();
+    }
+  }, [showLogin]);
+
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
-    // Simple mock authentication - in real app, this would be secure
-    if (adminPassword === 'admin123') {
-      setAdmin(true);
+    setLoginError('');
+
+    if (!email || !password) {
+      setLoginError('Please enter email and password');
+      return;
+    }
+
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+
+      const docRef = doc(db, 'users', res.user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        setLoginError('User record not found');
+        return;
+      }
+
+      const role = docSnap.data().role;
+      if (role !== 'admin') {
+        setLoginError('You are not authorized as admin');
+        return;
+      }
+
+      loginUser({ id: res.user.uid, email, type: 'admin' });
       setShowLogin(false);
-    } else {
-      alert('Invalid password. Use "admin123" for demo.');
+    } catch (err) {
+      setLoginError(err.message || 'Login failed');
     }
   };
 
   const handleLogout = () => {
-    setAdmin(false);
+    loginUser(null);
     setShowLogin(true);
-    setAdminPassword('');
+    setEmail('');
+    setPassword('');
   };
 
   const handleAddProduct = () => {
@@ -75,7 +126,7 @@ const AdminDashboard = () => {
     setEditingProduct(null);
   };
 
-  // Calculate statistics
+  // Overview stats
   const totalProducts = products.length;
   const inStockProducts = products.filter(p => p.inStock).length;
   const outOfStockProducts = totalProducts - inStockProducts;
@@ -88,30 +139,39 @@ const AdminDashboard = () => {
           <div className="text-center mb-6">
             <DashboardIcon className="text-blue-600 text-4xl mb-4" />
             <h2 className="text-2xl font-bold text-gray-800">Admin Login</h2>
-            <p className="text-gray-600">Enter password to access admin dashboard</p>
+            <p className="text-gray-600">Enter your credentials to access admin dashboard</p>
           </div>
-          
-          <form onSubmit={handleLogin}>
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Admin Password
-              </label>
+
+          {loginError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4">
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleAdminLogin}>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
-                type="password"
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                placeholder="Enter admin password"
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Demo password: <code className="bg-gray-100 px-1 rounded">admin123</code>
-              </p>
             </div>
-            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                required
+              />
+            </div>
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl"
             >
               Login
             </button>
@@ -130,7 +190,6 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
             <p className="text-gray-600">Manage your furniture inventory</p>
           </div>
-          
           <button
             onClick={handleLogout}
             className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-300"
@@ -145,21 +204,17 @@ const AdminDashboard = () => {
           <button
             onClick={() => setActiveTab('overview')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors duration-300 ${
-              activeTab === 'overview'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-600 hover:text-gray-800'
+              activeTab === 'overview' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:text-gray-800'
             }`}
           >
             <DashboardIcon className="text-sm" />
             <span>Overview</span>
           </button>
-          
+
           <button
             onClick={() => setActiveTab('products')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors duration-300 ${
-              activeTab === 'products'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-600 hover:text-gray-800'
+              activeTab === 'products' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:text-gray-800'
             }`}
           >
             <InventoryIcon className="text-sm" />
@@ -169,81 +224,22 @@ const AdminDashboard = () => {
 
         {/* Overview Tab */}
         {activeTab === 'overview' && (
-          <div className="space-y-8">
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Products</p>
-                    <p className="text-3xl font-bold text-gray-800">{totalProducts}</p>
-                  </div>
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <InventoryIcon className="text-blue-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">In Stock</p>
-                    <p className="text-3xl font-bold text-green-600">{inStockProducts}</p>
-                  </div>
-                  <div className="bg-green-100 p-3 rounded-full">
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Out of Stock</p>
-                    <p className="text-3xl font-bold text-red-600">{outOfStockProducts}</p>
-                  </div>
-                  <div className="bg-red-100 p-3 rounded-full">
-                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Avg. Price</p>
-                    <p className="text-3xl font-bold text-purple-600">${averagePrice.toFixed(0)}</p>
-                  </div>
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent Activity */}
+          <div className="space-y-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-gray-600">System initialized with {totalProducts} products</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span className="text-gray-600">Admin dashboard accessed</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <span className="text-gray-600">Cart contains {cart.length} items worth ${cartTotal.toFixed(2)}</span>
-                </div>
-              </div>
+              <p className="text-sm font-medium text-gray-600">Total Products</p>
+              <p className="text-3xl font-bold text-gray-800">{totalProducts}</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <p className="text-sm font-medium text-gray-600">In Stock</p>
+              <p className="text-3xl font-bold text-green-600">{inStockProducts}</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <p className="text-sm font-medium text-gray-600">Out of Stock</p>
+              <p className="text-3xl font-bold text-red-600">{outOfStockProducts}</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <p className="text-sm font-medium text-gray-600">Avg. Price</p>
+              <p className="text-3xl font-bold text-purple-600">${averagePrice.toFixed(0)}</p>
             </div>
           </div>
         )}
@@ -251,7 +247,6 @@ const AdminDashboard = () => {
         {/* Products Tab */}
         {activeTab === 'products' && (
           <div className="space-y-6">
-            {/* Add Product Button */}
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-800">Product Management</h2>
               <button
@@ -263,26 +258,20 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
                 <div key={product.id} className="relative group">
                   <ProductCard product={product} showAddToCart={false} />
-                  
-                  {/* Admin Actions Overlay */}
                   <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button
                       onClick={() => handleEditProduct(product)}
                       className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center"
-                      title="Edit Product"
                     >
                       <EditIcon className="text-lg" />
                     </button>
-                    
                     <button
                       onClick={() => handleDeleteProduct(product.id)}
                       className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center"
-                      title="Delete Product"
                     >
                       <DeleteIcon className="text-lg" />
                     </button>
@@ -290,24 +279,9 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-
-            {products.length === 0 && (
-              <div className="text-center py-16">
-                <InventoryIcon className="text-gray-400 text-6xl mb-4" />
-                <h3 className="text-xl font-medium text-gray-800 mb-2">No Products Found</h3>
-                <p className="text-gray-600 mb-6">Start by adding your first product to the inventory.</p>
-                <button
-                  onClick={handleAddProduct}
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center"
-                >
-                  Add First Product
-                </button>
-              </div>
-            )}
           </div>
         )}
 
-        {/* Admin Form Modal */}
         {showForm && (
           <AdminForm
             product={editingProduct}
