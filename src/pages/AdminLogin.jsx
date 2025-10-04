@@ -185,7 +185,7 @@ const AdminLogin = () => {
 
 export default AdminLogin;
 */
-
+/*
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -313,6 +313,185 @@ const AdminLogin = () => {
             className="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
           >
             Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default AdminLogin;
+*/
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
+import PersonIcon from '@mui/icons-material/Person';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
+
+const AdminLogin = () => {
+  const { loginAdmin } = useApp(); // ✅ Changed from loginUser to loginAdmin
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // ✅ Added loading state
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('🔵 Form submitted'); // Debug log
+    setErrors({});
+    setLoading(true); // ✅ Set loading state
+
+    // Validation
+    if (!formData.email || !formData.password) {
+      console.log('❌ Validation failed'); // Debug log
+      setErrors({ general: 'Please enter email and password' });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      console.log('🔵 Attempting sign in...'); // Debug log
+      
+      // Firebase Auth sign in
+      const res = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      console.log('✅ Sign in successful:', res.user.uid); // Debug log
+
+      // Get user role from Firestore
+      const docRef = doc(db, 'users', res.user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        console.log('❌ User record not found'); // Debug log
+        setErrors({ general: 'User record not found' });
+        setLoading(false);
+        return;
+      }
+
+      const userData = docSnap.data();
+      const role = userData.role;
+      console.log('👤 User role:', role); // Debug log
+
+      if (role !== 'admin') {
+        console.log('❌ Not authorized as admin'); // Debug log
+        setErrors({ general: 'You are not authorized as admin' });
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ Admin login successful'); // Debug log
+
+      // ✅ Log in admin using loginAdmin function
+      loginAdmin({
+        id: res.user.uid,
+        email: formData.email,
+        name: userData.name || 'Admin',
+        role: 'admin'
+      });
+
+      // Navigate to admin dashboard
+      console.log('🔵 Navigating to admin dashboard'); // Debug log
+      navigate('/admin', { replace: true });
+      
+    } catch (err) {
+      console.error('❌ Error during login:', err); // Debug log
+      
+      // Better error messages
+      let errorMessage = 'Login failed';
+      
+      if (err.code === 'auth/user-not-found') {
+        errorMessage = 'No user found with this email';
+      } else if (err.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password';
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email address';
+      } else if (err.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many failed attempts. Please try again later';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setErrors({ general: errorMessage });
+    } finally {
+      setLoading(false); // ✅ Reset loading state
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 pt-32 flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <PersonIcon className="text-gray-600 text-2xl" />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Admin Login</h2>
+          <p className="text-gray-600">Sign in to your admin account</p>
+        </div>
+
+        {errors.general && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+            {errors.general}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={loading}
+              className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent outline-none transition-all duration-300 border-gray-300 hover:border-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                disabled={loading}
+                className="w-full px-4 py-3 pr-12 border rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent outline-none transition-all duration-300 border-gray-300 hover:border-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={loading}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors duration-200 disabled:cursor-not-allowed"
+              >
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
       </div>
