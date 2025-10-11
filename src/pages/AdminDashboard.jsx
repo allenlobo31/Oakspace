@@ -25,7 +25,8 @@ const AdminDashboard = () => {
     userType,
     logout,
     cart,
-    cartTotal
+    cartTotal,
+    loading
   } = useApp();
 
   const navigate = useNavigate();
@@ -65,20 +66,33 @@ const AdminDashboard = () => {
     setShowForm(true);
   };
 
-  const handleDeleteProduct = (productId) => {
+  const handleDeleteProduct = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      deleteProduct(productId);
+      try {
+        await deleteProduct(productId);
+        alert('Product deleted successfully!');
+      } catch (error) {
+        alert('Failed to delete product. Please try again.');
+      }
     }
   };
 
-  const handleFormSubmit = (productData) => {
-    if (editingProduct) {
-      updateProduct(productData);
-    } else {
-      addProduct(productData);
+  // ✅ Fixed: Properly handle async operations
+  const handleFormSubmit = async (productData) => {
+    try {
+      if (editingProduct) {
+        await updateProduct(productData);
+        alert('Product updated successfully!');
+      } else {
+        await addProduct(productData);
+        alert('Product added successfully!');
+      }
+      setShowForm(false);
+      setEditingProduct(null);
+    } catch (error) {
+      console.error('Error saving product:', error);
+      throw error; // Let AdminForm handle the error
     }
-    setShowForm(false);
-    setEditingProduct(null);
   };
 
   const handleFormClose = () => {
@@ -133,6 +147,14 @@ const AdminDashboard = () => {
             <span>Products</span>
           </button>
         </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-8">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="text-gray-600 mt-2">Loading...</p>
+          </div>
+        )}
 
         {/* Overview Tab */}
         {activeTab === 'overview' && (
@@ -200,12 +222,19 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-bold text-gray-800">Product Management</h2>
               <button
                 onClick={handleAddProduct}
-                className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl"
+                disabled={loading}
+                className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <AddIcon />
                 <span>Add New Product</span>
               </button>
             </div>
+
+            {products.length === 0 && !loading && (
+              <div className="text-center py-12 bg-white rounded-lg shadow">
+                <p className="text-gray-500 text-lg">No products found. Add your first product!</p>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
@@ -214,13 +243,15 @@ const AdminDashboard = () => {
                   <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button
                       onClick={() => handleEditProduct(product)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center"
+                      disabled={loading}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center disabled:opacity-50"
                     >
                       <EditIcon className="text-lg" />
                     </button>
                     <button
                       onClick={() => handleDeleteProduct(product.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center"
+                      disabled={loading}
+                      className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center disabled:opacity-50"
                     >
                       <DeleteIcon className="text-lg" />
                     </button>
