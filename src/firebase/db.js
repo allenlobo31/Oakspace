@@ -1,131 +1,255 @@
-// import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot } from "firebase/firestore";
-// import app from "./config";
 
-// export const db = getFirestore(app);
-
-// // Add product
-// export const addProduct = async (product) => {
-//   await addDoc(collection(db, "products"), product);
-// };
-
-// // Get all products
-// export const getProducts = (callback) => {
-//   return onSnapshot(collection(db, "products"), (snapshot) => {
-//     const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-//     callback(data);
-//   });
-// };
-
-// // Add user with role
-// export const addUserWithRole = async (uid, email, role = "user") => {
-//   await setDoc(doc(db, "users", uid), { email, role });
-// };
-
-// // Get user role
-// export const getUserRole = async (uid) => {
-//   const docRef = doc(db, "users", uid);
-//   const docSnap = await getDoc(docRef);
-//   return docSnap.exists() ? docSnap.data().role : null;
-// };
-
+// src/firebase/db.js
 import { 
-  getFirestore, 
-  doc, 
-  setDoc, 
-  getDoc, 
   collection, 
   addDoc, 
-  updateDoc,
-  deleteDoc,
-  onSnapshot 
-} from "firebase/firestore";
-import app from "./config";
+  updateDoc, 
+  deleteDoc, 
+  doc, 
+  onSnapshot, 
+  serverTimestamp,
+  setDoc,
+  getDoc,
+  query,
+  orderBy,
+  where,
+  getDocs
+} from 'firebase/firestore';
+import { db } from './config';
 
-export const db = getFirestore(app);
+// ==================== PRODUCTS ====================
 
-// Add product to Firebase
 export const addProduct = async (product) => {
   try {
-    const docRef = await addDoc(collection(db, "products"), {
+    const docRef = await addDoc(collection(db, 'products'), {
       ...product,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: serverTimestamp()
     });
-    console.log("Product added with ID:", docRef.id);
     return docRef.id;
   } catch (error) {
-    console.error("Error adding product:", error);
+    console.error('Error adding product:', error);
     throw error;
   }
 };
 
-// Update product in Firebase
-export const updateProduct = async (productId, productData) => {
+export const getProducts = (callback) => {
+  const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const products = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    callback(products);
+  });
+};
+
+export const updateProduct = async (productId, updatedProduct) => {
   try {
-    const productRef = doc(db, "products", productId);
-    await updateDoc(productRef, {
-      ...productData,
-      updatedAt: new Date().toISOString()
-    });
-    console.log("Product updated:", productId);
+    const productRef = doc(db, 'products', productId);
+    await updateDoc(productRef, updatedProduct);
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error('Error updating product:', error);
     throw error;
   }
 };
 
-// Delete product from Firebase
 export const deleteProduct = async (productId) => {
   try {
-    const productRef = doc(db, "products", productId);
-    await deleteDoc(productRef);
-    console.log("Product deleted:", productId);
+    await deleteDoc(doc(db, 'products', productId));
   } catch (error) {
-    console.error("Error deleting product:", error);
+    console.error('Error deleting product:', error);
     throw error;
   }
 };
 
-// Get all products with real-time updates
-export const getProducts = (callback) => {
-  return onSnapshot(
-    collection(db, "products"), 
-    (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data() 
-      }));
-      callback(data);
-    },
-    (error) => {
-      console.error("Error fetching products:", error);
-    }
-  );
-};
+// ==================== USERS ====================
 
-// Add user with role
-export const addUserWithRole = async (uid, email, role = "user") => {
+export const addUserWithRole = async (uid, email, role) => {
   try {
-    await setDoc(doc(db, "users", uid), { 
-      email, 
+    await setDoc(doc(db, 'users', uid), {
+      email,
       role,
-      createdAt: new Date().toISOString()
+      createdAt: serverTimestamp()
     });
-    console.log("User added with role:", role);
   } catch (error) {
-    console.error("Error adding user:", error);
+    console.error('Error adding user:', error);
     throw error;
   }
 };
 
-// Get user role
 export const getUserRole = async (uid) => {
   try {
-    const docRef = doc(db, "users", uid);
-    const docSnap = await getDoc(docRef);
-    return docSnap.exists() ? docSnap.data().role : null;
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    if (userDoc.exists()) {
+      return userDoc.data().role;
+    }
+    return 'user';
   } catch (error) {
-    console.error("Error getting user role:", error);
-    return null;
+    console.error('Error getting user role:', error);
+    return 'user';
+  }
+};
+
+// ==================== ORDERS ====================
+
+export const createOrder = async (orderData) => {
+  try {
+    const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+    
+    await setDoc(doc(db, 'orders', orderId), {
+      orderId: orderId,
+      userId: orderData.userId,
+      userEmail: orderData.userEmail,
+      userName: orderData.userName,
+      userPhone: orderData.userPhone,
+      items: orderData.items,
+      totalAmount: orderData.totalAmount,
+      paymentId: orderData.paymentId,
+      paymentStatus: orderData.paymentStatus || 'success',
+      orderStatus: orderData.orderStatus || 'pending',
+      address: orderData.address,
+      createdAt: serverTimestamp()
+    });
+
+    return orderId;
+  } catch (error) {
+    console.error('Error creating order:', error);
+    throw error;
+  }
+};
+
+export const getOrders = (callback) => {
+  const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const orders = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    callback(orders);
+  });
+};
+
+export const getUserOrders = (userId, callback) => {
+  const q = query(
+    collection(db, 'orders'), 
+    where('userId', '==', userId),
+    orderBy('createdAt', 'desc')
+  );
+  return onSnapshot(q, (snapshot) => {
+    const orders = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    callback(orders);
+  });
+};
+
+export const getOrderById = async (orderId) => {
+  try {
+    const orderDoc = await getDoc(doc(db, 'orders', orderId));
+    if (orderDoc.exists()) {
+      return {
+        id: orderDoc.id,
+        ...orderDoc.data()
+      };
+    }
+    throw new Error('Order not found');
+  } catch (error) {
+    console.error('Error getting order:', error);
+    throw error;
+  }
+};
+
+export const updateOrderStatus = async (orderId, status) => {
+  try {
+    const orderRef = doc(db, 'orders', orderId);
+    await updateDoc(orderRef, {
+      orderStatus: status,
+      updatedAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    throw error;
+  }
+};
+
+// ==================== NOTIFICATIONS ====================
+
+export const createNotification = async (notificationData) => {
+  try {
+    const docRef = await addDoc(collection(db, 'notifications'), {
+      type: notificationData.type || 'new_order',
+      orderId: notificationData.orderId,
+      message: notificationData.message,
+      orderAmount: notificationData.orderAmount,
+      customerName: notificationData.customerName,
+      isRead: false,
+      timestamp: serverTimestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating notification:', error);
+    throw error;
+  }
+};
+
+export const getNotifications = (callback) => {
+  const q = query(collection(db, 'notifications'), orderBy('timestamp', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const notifications = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    callback(notifications);
+  });
+};
+
+export const getUnreadNotificationsCount = (callback) => {
+  const q = query(
+    collection(db, 'notifications'), 
+    where('isRead', '==', false)
+  );
+  return onSnapshot(q, (snapshot) => {
+    callback(snapshot.size);
+  });
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+  try {
+    const notificationRef = doc(db, 'notifications', notificationId);
+    await updateDoc(notificationRef, {
+      isRead: true
+    });
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    throw error;
+  }
+};
+
+export const markAllNotificationsAsRead = async () => {
+  try {
+    const q = query(
+      collection(db, 'notifications'), 
+      where('isRead', '==', false)
+    );
+    const snapshot = await getDocs(q);
+    
+    const updatePromises = snapshot.docs.map(document => 
+      updateDoc(doc(db, 'notifications', document.id), { isRead: true })
+    );
+    
+    await Promise.all(updatePromises);
+  } catch (error) {
+    console.error('Error marking all notifications as read:', error);
+    throw error;
+  }
+};
+
+export const deleteNotification = async (notificationId) => {
+  try {
+    await deleteDoc(doc(db, 'notifications', notificationId));
+  } catch (error) {
+    console.error('Error deleting notification:', error);
+    throw error;
   }
 };
