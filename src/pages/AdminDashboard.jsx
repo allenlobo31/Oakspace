@@ -3,13 +3,15 @@ import { useApp } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import AdminForm from '../Components/AdminForm';
 import ProductCard from '../Components/ProductCard';
+import NotificationBell from '../Components/NotificationBell';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Dashboard as DashboardIcon,
   Inventory as InventoryIcon,
-  Logout as LogoutIcon
+  Logout as LogoutIcon,
+  ShoppingBag as ShoppingBagIcon
 } from '@mui/icons-material';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -77,7 +79,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // ✅ Fixed: Properly handle async operations
   const handleFormSubmit = async (productData) => {
     try {
       if (editingProduct) {
@@ -91,7 +92,7 @@ const AdminDashboard = () => {
       setEditingProduct(null);
     } catch (error) {
       console.error('Error saving product:', error);
-      throw error; // Let AdminForm handle the error
+      throw error;
     }
   };
 
@@ -116,13 +117,18 @@ const AdminDashboard = () => {
             <p className="text-gray-600">Manage your furniture inventory</p>
             {user && <p className="text-sm text-gray-500 mt-1">Welcome, {user.email}</p>}
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-300"
-          >
-            <LogoutIcon />
-            <span>Logout</span>
-          </button>
+          
+          {/* Right side - Notification Bell & Logout */}
+          <div className="flex items-center space-x-4">
+            <NotificationBell />
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-300"
+            >
+              <LogoutIcon />
+              <span>Logout</span>
+            </button>
+          </div>
         </div>
 
         {/* Navigation Tabs */}
@@ -145,6 +151,14 @@ const AdminDashboard = () => {
           >
             <InventoryIcon className="text-sm" />
             <span>Products</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/admin/orders')}
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:text-gray-800 transition-colors duration-300"
+          >
+            <ShoppingBagIcon className="text-sm" />
+            <span>Orders</span>
           </button>
         </div>
 

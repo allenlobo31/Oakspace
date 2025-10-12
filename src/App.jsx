@@ -18,6 +18,8 @@ import AdminDashboard from './pages/AdminDashboard'
 import UserLogin from './pages/UserLogin'
 import UserSignup from './pages/UserSignup'
 import AdminLogin from './pages/AdminLogin'
+import AdminOrders from './pages/AdminOrders'
+import OrderDetails from './pages/OrderDetails'
 
 function App() {
   return (
@@ -25,7 +27,7 @@ function App() {
       <Router>
         <div className="min-h-screen flex flex-col">
           <NewNavbar />
-          
+         
           <main className="flex-1">
             <Routes>
               {/* Public Routes */}
@@ -33,36 +35,54 @@ function App() {
               <Route path="/products" element={<Products />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
-              
+             
               {/* User Authentication Routes */}
               <Route path="/login" element={<UserLogin />} />
               <Route path="/signup" element={<UserSignup />} />
-              
+             
               {/* Admin Authentication Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
-              
+             
               {/* Protected User Routes */}
-              <Route 
-                path="/checkout" 
+              <Route
+                path="/checkout"
                 element={
                   <ProtectedRoute requireUser={true}>
                     <Checkout />
                   </ProtectedRoute>
-                } 
+                }
               />
-              
+             
               {/* Protected Admin Routes */}
-              <Route 
-                path="/admin" 
+              <Route
+                path="/admin"
                 element={
                   <ProtectedRoute requireAdmin={true}>
                     <AdminDashboard />
                   </ProtectedRoute>
-                } 
+                }
+              />
+              
+              <Route
+                path="/admin/orders"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AdminOrders />
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
+                path="/admin/orders/:orderId"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <OrderDetails />
+                  </ProtectedRoute>
+                }
               />
             </Routes>
           </main>
-          
+         
           <Footer />
         </div>
       </Router>
@@ -70,4 +90,4 @@ function App() {
   )
 }
 
-export default App;
+export default App
