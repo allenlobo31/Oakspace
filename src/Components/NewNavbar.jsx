@@ -99,41 +99,37 @@ const NewNavbar = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg' 
-        : 'bg-white/90 backdrop-blur-sm'
-    }`}>
-      <div className="container mx-auto px-4">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/95 backdrop-blur-md shadow-lg"
+          : "bg-white/90 backdrop-blur-sm"
+      }`}
+    >
+      <div className="container m-auto px-4">
         {/* Main Navigation Bar */}
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 ">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#dec8a0] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">O</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">OakSpace</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            <Link 
-              to="/" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
-            >
-              Home
-            </Link>
-
             {/* Categories Dropdown */}
             <div className="relative" ref={categoriesRef}>
               <button
                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                className="flex items-center space-x-1 text-gray-800 hover:text-black font-medium transition-colors duration-200"
               >
                 <span>Categories</span>
-                <KeyboardArrowDownIcon className={`text-sm transition-transform duration-200 ${
-                  isCategoriesOpen ? 'rotate-180' : ''
-                }`} />
+                <KeyboardArrowDownIcon
+                  className={`text-sm transition-transform duration-200 ${
+                    isCategoriesOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
               {/* Categories Dropdown Menu */}
@@ -141,18 +137,23 @@ const NewNavbar = () => {
                 <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 py-4 z-50">
                   <div className="grid grid-cols-1 gap-1">
                     {categories.map((category) => (
-                      <div key={category.name} className="px-4 py-2 hover:bg-gray-50 transition-colors duration-200">
+                      <div
+                        key={category.name}
+                        className="px-4 py-2 hover:bg-gray-50 transition-colors duration-200"
+                      >
                         <button
                           onClick={() => handleCategoryClick(category.name)}
                           className="flex items-center justify-between w-full text-left"
                         >
-                          <span className="font-semibold text-gray-800">{category.name}</span>
+                          <span className="font-semibold text-gray-800">
+                            {category.name}
+                          </span>
                         </button>
                         <div className="mt-1 flex flex-wrap gap-2">
                           {category.subcategories.map((sub) => (
                             <span
                               key={sub}
-                              className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer transition-colors duration-200"
+                              className="text-xs text-gray-500 hover:text-black cursor-pointer transition-colors duration-200"
                               onClick={() => handleCategoryClick(category.name)}
                             >
                               {sub}
@@ -166,9 +167,9 @@ const NewNavbar = () => {
               )}
             </div>
 
-            <Link 
-              to="/products" 
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+            <Link
+              to="/products"
+              className="text-gray-800 hover:text-black font-medium transition-colors duration-200"
             >
               All Products
             </Link>
@@ -200,7 +201,7 @@ const NewNavbar = () => {
             {/* Cart */}
             <Link
               to="/cart"
-              className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
+              className="hidden md:flex relative p-2 text-gray-800 hover:text-black transition-colors duration-200"
             >
               <ShoppingCartOutlinedIcon />
               {cartItemsCount > 0 && (
@@ -215,24 +216,30 @@ const NewNavbar = () => {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 p-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
+                  className="flex items-center space-x-2 p-2 text-gray-700 hover:text-black transition-colors duration-200"
                 >
                   <PersonOutlineIcon />
-                  <span className="hidden sm:inline text-sm font-medium">{user?.name}</span>
-                  <KeyboardArrowDownIcon className={`text-sm transition-transform duration-200 ${
-                    isUserMenuOpen ? 'rotate-180' : ''
-                  }`} />
+                  <span className="hidden sm:inline text-sm font-medium">
+                    {user?.name}
+                  </span>
+                  <KeyboardArrowDownIcon
+                    className={`text-sm transition-transform duration-200 ${
+                      isUserMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
 
                 {/* User Dropdown Menu */}
                 {isUserMenuOpen && (
                   <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-50">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {user?.name}
+                      </p>
                       <p className="text-xs text-gray-500">{user?.email}</p>
                     </div>
-                    
-                    {userType === 'admin' && (
+
+                    {userType === "admin" && (
                       <Link
                         to="/admin"
                         onClick={() => setIsUserMenuOpen(false)}
@@ -242,7 +249,7 @@ const NewNavbar = () => {
                         <span>Admin Dashboard</span>
                       </Link>
                     )}
-                    
+
                     <button
                       onClick={handleLogout}
                       className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
@@ -257,15 +264,26 @@ const NewNavbar = () => {
               <div className="flex items-center space-x-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200"
+                  className="px-2 py-2 font-medium text-gray-800 hover:text-black duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
+                  className="w-20 px-1 py-1 bg-[#dec8a0] text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
                 >
                   Sign Up
+                </Link>
+                <Link
+                  to="/cart"
+                  className="md:hidden pl-2 relative text-gray-800 hover:text-black transition-colors duration-200"
+                >
+                  <ShoppingCartOutlinedIcon />
+                  {cartItemsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                      {cartItemsCount}
+                    </span>
+                  )}
                 </Link>
               </div>
             )}
@@ -273,7 +291,7 @@ const NewNavbar = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
+              className="lg:hidden py-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
@@ -309,18 +327,18 @@ const NewNavbar = () => {
               <Link
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
               >
                 Home
               </Link>
               <Link
                 to="/products"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
               >
                 All Products
               </Link>
-              
+
               {/* Mobile Categories */}
               {categories.map((category) => (
                 <button

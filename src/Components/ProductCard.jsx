@@ -41,7 +41,7 @@ const ProductCard = ({ product, showAddToCart = true }) => {
   };
 
   return (
-    <div 
+    <div
       className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group overflow-hidden border border-gray-100 hover:border-blue-200"
       onClick={handleCardClick}
     >
@@ -52,7 +52,7 @@ const ProductCard = ({ product, showAddToCart = true }) => {
           alt={product.name}
           className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        
+
         {/* Stock Status Badge */}
         <div className="absolute top-4 left-4">
           {product.inStock ? (
@@ -68,7 +68,7 @@ const ProductCard = ({ product, showAddToCart = true }) => {
 
         {/* Action Buttons */}
         <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-500">
-          <button 
+          <button
             className="bg-white/95 backdrop-blur-sm hover:bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
@@ -80,12 +80,12 @@ const ProductCard = ({ product, showAddToCart = true }) => {
       {/* Product Info */}
       <div className="p-6">
         {/* Category */}
-        <p className="text-sm text-blue-600 uppercase tracking-wider font-semibold mb-2">
+        <p className="text-sm text-black uppercase tracking-wider font-semibold mb-2">
           {product.category}
         </p>
 
         {/* Product Name */}
-        <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
+        <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 transition-colors duration-300">
           {product.name}
         </h3>
 
@@ -105,7 +105,7 @@ const ProductCard = ({ product, showAddToCart = true }) => {
         {/* Price and Add to Cart */}
         <div className="flex items-center justify-between mt-4 gap-3">
           <div className="flex flex-col">
-            <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl lg:text-3xl font-bold text-black bg-clip-text">
               ${product.price}
             </span>
           </div>
@@ -116,8 +116,8 @@ const ProductCard = ({ product, showAddToCart = true }) => {
               disabled={!product.inStock}
               className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 whitespace-nowrap min-w-[140px] ${
                 product.inStock
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white hover:scale-105 shadow-lg hover:shadow-xl transform'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  ? "bg-[#241e19] text-white hover:scale-105 shadow-lg hover:shadow-xl transform"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
               <ShoppingCartOutlinedIcon className="text-lg flex-shrink-0" />
