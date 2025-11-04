@@ -21,7 +21,7 @@ const Footer = () => {
               style, and quality to your home with our carefully curated
               collection.
             </p>
-            <div className="flex justify-center space-x-4">
+            <div className="flex items-start space-x-4">
               <a
                 href="#"
                 className="text-[#4b4b4b] hover:text-[#1a1a1a] transition-colors duration-300"
@@ -167,30 +167,6 @@ const Footer = () => {
                 <EmailIcon className="text-[#4b4b4b]" />
                 <span className="text-[#3b3b3b]">info@oakspace.com</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Newsletter Signup */}
-        <div className="border-t border-[#bda87c] mt-8 pt-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div className="mb-4 md:mb-0">
-              <h4 className="text-lg font-semibold text-[#1a1a1a] mb-2">
-                Subscribe to Our Newsletter
-              </h4>
-              <p className="text-[#3b3b3b]">
-                Get the latest updates on new products and exclusive offers.
-              </p>
-            </div>
-            <div className="flex justify-center space-x-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="px-4 py-2 bg-white border border-[#bda87c] rounded-lg text-[#1a1a1a] placeholder-[#7a7a7a] focus:ring-2 focus:ring-[#8b6b2b] focus:border-transparent outline-none"
-              />
-              <button className="px-6 py-2 bg-[#8b6b2b] hover:bg-[#6f5623] text-white rounded-lg font-medium transition-colors duration-300">
-                Subscribe
-              </button>
             </div>
           </div>
         </div>

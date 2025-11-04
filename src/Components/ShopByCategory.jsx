@@ -4,7 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export default function ShopByCategory({ src, alt, title, link }) {
   return (
-    <div className="w-1/2 h-full flex-shrink-0 border border-gray-200 rounded-lg overflow-hidden mx-auto md:w-84">
+    <div className="w-1/2 h-full flex-shrink-0 border border-gray-200 rounded-lg overflow-hidden mx-auto md:w-84 mb-9">
       <img src={src} alt={alt} className="w-full h-64 object-cover" />
       <div className="flex flex-row justify-between items-center">
         <h3 className="text-md font-bold text-gray-800 p-2">{title}</h3>

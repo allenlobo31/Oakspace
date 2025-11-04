@@ -111,7 +111,7 @@ const NewNavbar = () => {
         <div className="flex items-center justify-between h-16 ">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-[#dec8a0] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#241e19] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">O</span>
             </div>
           </Link>
@@ -270,7 +270,7 @@ const NewNavbar = () => {
                 </Link>
                 <Link
                   to="/signup"
-                  className="w-20 px-1 py-1 bg-[#dec8a0] text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
+                  className="w-20 px-1 py-1 bg-[#241e19] text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 >
                   Sign Up
                 </Link>

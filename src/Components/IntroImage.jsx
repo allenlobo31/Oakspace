@@ -22,10 +22,10 @@ function IntroImage() {
             </h3>
           </div>
           <div className="flex flex-row gap-4 justify-center items-center">
-            <button className="mt-4 px-6 py-4 bg-white/20 hover:bg-white/30 text-white border border-white/50 backdrop-blur-sm transition-all duration-300 text-lg font-semibold hover:scale-105 rounded-xl flex items-center justify-center">
+            <button className="mt-4 w-32 px-6 py-4 bg-white/20 hover:bg-white/30 text-white border border-white/50 backdrop-blur-sm transition-all duration-300 text-lg font-semibold hover:scale-105 rounded-xl flex items-center justify-center">
               Explore Collection
             </button>
-            <button className="mt-4 px-6 py-4 bg-white/20 hover:bg-white/30 text-white border border-white/50 backdrop-blur-sm transition-all duration-300 text-lg font-semibold hover:scale-105 rounded-xl flex items-center justify-center">
+            <button className="mt-4 w-32 px-6 py-4 bg-white/20 hover:bg-white/30 text-white border border-white/50 backdrop-blur-sm transition-all duration-300 text-lg font-semibold hover:scale-105 rounded-xl flex items-center justify-center">
               Best Sellers
             </button>
           </div>
