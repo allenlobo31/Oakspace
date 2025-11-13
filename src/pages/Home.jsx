@@ -24,7 +24,7 @@ const Home = () => {
     "https://w0.peakpx.com/wallpaper/21/908/HD-wallpaper-gold-marbel-marble.jpg";
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-16 w-full bg-gray-50 lg:w-screen lg:h-screen lg:min-h-screen lg:min-w-screen lg:pt-0">
       {/* Hero Section with existing components */}
       <IntroImage />
 
