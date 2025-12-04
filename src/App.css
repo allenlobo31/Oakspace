@@ -5,3 +5,64 @@
   padding: 0;
   text-align: center;
 }
+
+/* Landing animations */
+@keyframes bgZoom {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
+}
+.animate-bg-zoom {
+  animation: bgZoom 1000ms cubic-bezier(.22,.9,.31,1) 200ms both;
+  transform-origin: center;
+}
+
+/* IntroVideo animations */
+@keyframes videoZoom {
+  from { transform: scale(1.06); }
+  to   { transform: scale(1); }
+}
+.animate-video-zoom {
+  animation: videoZoom 1100ms cubic-bezier(.22,.9,.31,1) 150ms both;
+  transform-origin: center;
+}
+
+@keyframes heroUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-hero-up {
+  opacity: 0;
+  animation: heroUp 700ms cubic-bezier(.22,.9,.31,1) 500ms both;
+}
+.animate-hero-sub {
+  opacity: 0;
+  animation: heroUp 700ms cubic-bezier(.22,.9,.31,1) 700ms both;
+}
+.animate-hero-cta {
+  opacity: 0;
+  animation: heroUp 700ms cubic-bezier(.22,.9,.31,1) 900ms both;
+}
+.animate-video-up {
+  opacity: 0;
+  animation: heroUp 700ms cubic-bezier(.22,.9,.31,1) 450ms both;
+}
+
+/* optional small fade for other content */
+.fade-in {
+  opacity: 0;
+  animation: heroUp 700ms ease 1100ms both;
+}
+
+/* down-arrow fade in */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.scroll-down-fade {
+  animation: fadeUp 700ms ease 1200ms both;
+}
+
+/* ensure SVG uses currentColor and is visible on dark overlays */
+button[aria-label="Scroll down"] svg {
+  color: white;
+}
